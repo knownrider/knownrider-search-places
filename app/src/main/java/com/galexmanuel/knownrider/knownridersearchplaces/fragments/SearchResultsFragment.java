@@ -19,7 +19,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
- * A placeholder fragment containing a simple view.
+ * A fragment containing the results of the user's search.
  */
 public class SearchResultsFragment extends Fragment {
 

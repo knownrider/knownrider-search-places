@@ -15,6 +15,9 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
 
+/**
+ * An activity to host the results of the user's place search.
+ */
 public class SearchResultsActivity extends BaseActivity {
 
     private static final String TAG = SearchResultsActivity.class.getSimpleName();

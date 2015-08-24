@@ -17,6 +17,9 @@ import com.galexmanuel.knownrider.knownridersearchplaces.views.PlacesAutoComplet
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 
+/**
+ * Main activity where users can type searches in the toolbar.
+ */
 public class MainActivity extends BaseActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();

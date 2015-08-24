@@ -7,7 +7,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 
 /**
- * Created by amanuel on 8/24/15.
+ * A subclass of SearchView that adds in Place autocomplete.
  */
 public class PlacesAutoCompleteSearchView extends SearchView {
 

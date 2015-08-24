@@ -13,7 +13,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
- * A placeholder fragment containing a simple view.
+ * A fragment containing a an introduction to me and the app,
+ * while the user searches in the toolbar.
  */
 public class SearchFragment extends Fragment {
 

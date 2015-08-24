@@ -17,7 +17,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.places.Places;
 
 /**
- * Created by amanuel on 8/24/15.
+ * A BaseActivity with the logic to set up the google places api client
  */
 public abstract class BaseActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
