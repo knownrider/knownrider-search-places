@@ -24,7 +24,7 @@ public class PlacesAutoCompleteSearchView extends SearchView {
     }
 
     public void initialize() {
-        mSearchAutoComplete = (SearchView.SearchAutoComplete) findViewById(android.support.v7.appcompat.R.id.search_src_text);
+        mSearchAutoComplete = (SearchAutoComplete) findViewById(android.support.v7.appcompat.R.id.search_src_text);
         this.setAdapter(null);
         this.setOnItemClickListener(null);
     }
@@ -35,9 +35,5 @@ public class PlacesAutoCompleteSearchView extends SearchView {
 
     public void setAdapter(ArrayAdapter<?> adapter) {
         mSearchAutoComplete.setAdapter(adapter);
-    }
-
-    public void setText(String text) {
-        mSearchAutoComplete.setText(text);
     }
 }
