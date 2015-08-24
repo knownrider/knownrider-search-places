@@ -1,9 +1,10 @@
 <resources>
-    <string name="app_name">KnownriderSearchPlaces</string>
+    <string name="app_name">Place Search</string>
 
-    <string name="main_cta">Search Places</string>
+    <string name="main_cta">Search Places or Cities</string>
     <string name="action_search">Search</string>
     <string name="search_hint">Enter a Place Name</string>
+    <string name="no_details_hint">There is limited information for this Place.  Businesses usually tend to return the best results.</string>
 
     <string name="my_name">Alex Manuel</string>
     <string name="my_description">Android Candidate Coding Project for HotelTonight: https://github.com/hoteltonight/ht-coding-exercise-knownrider/</string>

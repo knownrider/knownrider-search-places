@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -90,6 +91,7 @@ public class SearchResultsFragment extends Fragment {
         final String address = getArguments().getString(ADDRESS_KEY);
         if (!TextUtils.isEmpty(address)) {
             mTvPlaceAddress.setText(address);
+            Log.d("WTF", "ADDRESS: " + address);
         } else {
             mTvPlaceAddress.setVisibility(View.INVISIBLE);
         }
@@ -100,7 +102,7 @@ public class SearchResultsFragment extends Fragment {
         if (!TextUtils.isEmpty(number)) {
             mTvPlacePhoneNumber.setText(number);
         } else {
-            mTvPlacePhoneNumber.setVisibility(View.INVISIBLE);
+            mTvPlacePhoneNumber.setText(getString(R.string.no_details_hint));
         }
     }
 
@@ -109,10 +111,12 @@ public class SearchResultsFragment extends Fragment {
         final String weburl = (webUri != null && webUri.isHierarchical()) ? webUri.toString() : null;
         if (!TextUtils.isEmpty(weburl)) {
             mTvPlaceWebsite.setText(weburl);
+            mWebVwebView.getSettings().setJavaScriptEnabled(true);
             mWebVwebView.setWebViewClient(new PlaceWebViewClient());
             mWebVwebView.loadUrl(weburl);
         } else {
-            mTvPlaceAddress.setVisibility(View.INVISIBLE);
+            mTvPlaceWebsite.setVisibility(View.INVISIBLE);
+            mWebVwebView.setVisibility(View.INVISIBLE);
         }
     }
 
