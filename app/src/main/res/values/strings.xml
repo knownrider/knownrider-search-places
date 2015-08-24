@@ -4,4 +4,8 @@
     <string name="main_cta">Search Places</string>
     <string name="action_search">Search</string>
     <string name="search_hint">Enter a Place Name</string>
+
+    <string name="my_name">Alex Manuel</string>
+    <string name="my_description">Android Candidate Coding Project for HotelTonight: https://github.com/hoteltonight/ht-coding-exercise-knownrider/</string>
+    <string name="my_email">galexmanuel@gmail.com</string>
 </resources>

@@ -8,10 +8,21 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".SearchFragment">
 
+    <include
+        layout="@layout/layout_contact_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp" />
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:src="@drawable/ic_ht_hbed_white" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="56dp"
         android:layout_gravity="bottom|center_horizontal"
         android:paddingBottom="10dp"
         android:src="@drawable/powered_by_google_light" />
