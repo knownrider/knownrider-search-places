@@ -1,8 +1,6 @@
 package com.galexmanuel.knownrider.knownridersearchplaces.activities;
 
 import android.app.Dialog;
-import android.app.SearchManager;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -11,18 +9,29 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Toast;
 
 import com.galexmanuel.knownrider.knownridersearchplaces.R;
+import com.galexmanuel.knownrider.knownridersearchplaces.adapters.PlaceAutocompleteAdapter;
 import com.galexmanuel.knownrider.knownridersearchplaces.fragments.ProgressFragment;
 import com.galexmanuel.knownrider.knownridersearchplaces.fragments.SearchFragment;
+import com.galexmanuel.knownrider.knownridersearchplaces.views.PlacesAutoCompleteSearchView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
@@ -34,6 +43,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     private static final String DIALOG_ERROR = "dialog_error";
     private static final String STATE_RESOLVING_ERROR = "resolving_error";
     private boolean mResolvingGoogleError;
+
+
+    private PlaceAutocompleteAdapter mAdapter;
+
+    private PlacesAutoCompleteSearchView mAutoCompleteTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     private void setSearchFragmentView() {
         if (mGoogleApiClient != null && !mResolvingGoogleError) {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.fragment_container, SearchFragment.newInstance(mGoogleApiClient), SearchFragment.class.getSimpleName());
+            ft.replace(R.id.fragment_container, SearchFragment.newInstance(), SearchFragment.class.getSimpleName());
             ft.commit();
         }
     }
@@ -97,9 +111,21 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
 
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.search));
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        //SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        mAutoCompleteTextView = (PlacesAutoCompleteSearchView) MenuItemCompat.getActionView(menu.findItem(R.id.search));
+        mAutoCompleteTextView.setOnItemClickListener(mAutocompleteClickListener);
+
+        // LatLngBounds used to seed the Autocomplete buffer
+        // North America - general results
+        final LatLngBounds bounds = new LatLngBounds(new LatLng(28.70, -127.50), new LatLng(48.85, -55.90));
+        // Hotel Tonight office - fine results for SF
+        // final LatLngBounds bounds = new LatLngBounds.Builder().include(new LatLng(37.783736, -122.408066)).build();
+
+        mAdapter = new PlaceAutocompleteAdapter(this, android.R.layout.simple_list_item_1,
+                mGoogleApiClient, bounds, null);
+        mAutoCompleteTextView.setAdapter(mAdapter);
+
+        //searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         return true;
     }
 
@@ -110,21 +136,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        if (id == R.id.search) {
-            onSearchRequested();
-            return true;
-        }
 
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public boolean onSearchRequested() {
-        Bundle appData = new Bundle();
-        appData.putString("hello", "world");
-        startSearch(null, false, appData, false);
-        return true;
-    }
 
     @Override
     public void onConnected(Bundle bundle) {
@@ -209,4 +224,61 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             ((MainActivity) getActivity()).onDialogDismissed();
         }
     }
+
+    /**
+     * Listener that handles selections from suggestions from the AutoCompleteTextView that
+     * displays Place suggestions.
+     * Gets the place id of the selected item and issues a request to the Places Geo Data API
+     * to retrieve more details about the place.
+     */
+    private AdapterView.OnItemClickListener mAutocompleteClickListener
+            = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            /*
+             Retrieve the place ID of the selected item from the Adapter.
+             The adapter stores each Place suggestion in a PlaceAutocomplete object from which we
+             read the place ID.
+              */
+            final PlaceAutocompleteAdapter.PlaceAutocomplete item = mAdapter.getItem(position);
+            final String placeId = String.valueOf(item.placeId);
+            Log.i(TAG, "Autocomplete item selected: " + item.description);
+
+            /*
+             Issue a request to the Places Geo Data API to retrieve a Place object with additional
+              details about the place.
+              */
+            PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi
+                    .getPlaceById(mGoogleApiClient, placeId);
+            placeResult.setResultCallback(mUpdatePlaceDetailsCallback);
+
+            Toast.makeText(getApplicationContext(), "Clicked: " + item.description, Toast.LENGTH_SHORT).show();
+            Log.i(TAG, "Called getPlaceById to get Place details for " + item.placeId);
+        }
+    };
+
+    /**
+     * Callback for results from a Places Geo Data API query that shows the first place result in
+     * the details view on screen.
+     */
+    private ResultCallback<PlaceBuffer> mUpdatePlaceDetailsCallback
+            = new ResultCallback<PlaceBuffer>() {
+        @Override
+        public void onResult(PlaceBuffer places) {
+            if (!places.getStatus().isSuccess()) {
+                // Request did not complete successfully
+                Log.e(TAG, "Place query did not complete. Error: " + places.getStatus().toString());
+                places.release();
+                return;
+            }
+            // Get the Place object from the buffer.
+            final Place place = places.get(0);
+
+
+            Log.i(TAG, "Place details received: " + place.getName());
+
+            places.release();
+        }
+    };
+
 }
