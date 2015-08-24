@@ -1,10 +1,12 @@
 <resources>
     <string name="app_name">KnownriderSearchPlaces</string>
 
-    <string name="hello_world">Hello world!</string>
+    <string name="search_results_fragment">Search Results Fragment</string>
     <string name="action_settings">Settings</string>
+    <string name="action_search">Search</string>
+    <string name="search_hint">Enter a Place Name</string>
     <string name="title_activity_search_results">SearchResultsActivity</string>
 
-<!-- TODO: Remove or change this placeholder text -->
+    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
