@@ -1,9 +1,11 @@
-package com.galexmanuel.knownrider.knownridersearchplaces;
+package com.galexmanuel.knownrider.knownridersearchplaces.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.galexmanuel.knownrider.knownridersearchplaces.R;
 
 public class MainActivity extends AppCompatActivity {
 
