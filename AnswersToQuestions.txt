@@ -1,0 +1,24 @@
+1. What error conditions will you encounter? How should these be handled?
+
+The google places api can time-out or fail to connect.  It tries to reconnect if it can over come the issue.
+If this was a production app, a useful screen to notify the user of the issue would be helpful.
+
+I chose to use a webview to load businesses websites in the results screen.  I thought it added some color.
+However, it does put a little more work on the UI thread loading the URL.
+I think I would avoid the webview in a production app altogether, if possible.
+
+2. Where could the user experience break? How will you prevent this?
+
+The user experience could break loading the webview because it puts a lot of work on the UI thread.
+I would use a better native solution in a production app.
+If no desired results are found within the list provided by Google Places, it would create a bad user experience.
+
+3. What other improvements can be made?
+
+The Google Places API is better at returning businesses location data than general data about cities, etc.
+Making a secondary call to get specific data about a city might be a better experience, than jsut showing what we get from Google Places.
+
+4. Extra credit: Without running it, what’s the result of this statement and why? System.out.println(-1/9);
+
+I'll admit I ran it to find out the output, and it is 0.  I think it is 0 because
+the equation of integer values evaluates to the nearest integer value which is 0.
